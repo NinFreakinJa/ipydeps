@@ -17,10 +17,12 @@ from ipydeps.utils import normalize_package_names
 
 def test_get_pkg_names():
     assert len(get_pkg_names('abc DEF hIj')) == 3
+    assert len(get_pkg_names('abc[DEF] HIJ kLo[mnp,qrs]')) == 3
 
 def test_pkg_name_list():
     assert len(get_pkg_names('abc DEF hIj')) == 3
     assert len(get_pkg_names(['abc', 'DEF', 'hIj'])) == 3
+    assert len(get_pkg_names(['abc[DEF]', 'HIJ', 'kLo[mnp,qrs]'])) == 3
 
 def test_bad_pkg_name():
     assert len(get_pkg_names(['exec', 'exec()'])) == 1
@@ -66,6 +68,11 @@ def test_version_specifier_special_release_with_seperator():
     packages = get_pkg_names('bar==5.4.0.dev1')
     assert len(packages) == 1
     assert 'bar==5.4.0.dev1' in packages
+
+def test_version_specifier_with_extras():
+    packages = get_pkg_names('bar[extra]==5.4.0.dev1')
+    assert len(packages) == 1
+    assert 'bar[extra]==5.4.0.dev1' in packages
 
 def test_version_specifier_plus_sign_release():
     packages = get_pkg_names('bar~=2.0.43+2')
